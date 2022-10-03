@@ -1,7 +1,9 @@
 
 import androidx.test.espresso.ViewInteraction;
 
+import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
@@ -9,7 +11,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isFocusable;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.action.ViewActions.click;
 
@@ -38,13 +42,6 @@ public class Authorization {
     String validLogin = "login2";
     String validPassword = "password2";
 
-//    @Test
-//    public void logInToTheApp() {
-//        ViewInteraction mainText = onView(withId(R.id.enter_button)); // создаём ViewInteraction и указываем по id искомый элемент
-//        mainText.check(matches(isDisplayed())); // проверка что элемент отражается на старнице
-//        mainText.check(matches(withText("Войти"))); // и у этого эемента текс Войти
-//    }
-
     @Test
     public void logInToTheApp() {
         ViewInteraction mainText = onView(withText("Авторизация")); // создаём ViewInteraction и указываем по id искомый элемент
@@ -53,21 +50,13 @@ public class Authorization {
     }
 
     @Test
-    public void logInWithValidData() {
-        onView(withId(R.id.login_text_input_layout)).perform(typeText(validLogin));
-
+    public void logInWithValidData() throws InterruptedException {
+        onView(allOf(withHint("Логин"))).perform(replaceText(validLogin)).check(matches(withText("login2"))); // вводим логин
+        onView(allOf(withHint("Пароль"))).perform(replaceText(validPassword)).check(matches(withText("password2"))); // вводим пароль
+        closeSoftKeyboard(); // скрываем клавиатуру ввода
+        onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопк входа
+        onView(withId(R.id.trademark_image_view)).check(matches(isDisplayed())); // убеждаемся что вошли в приложение, отображается кнопка меню
     }
-//    @Test
-//    public void logInWithValidPassword() {
-//        onView(withId(R.id.password_text_input_layout)).perform(typeText(validPassword));
-//    }
-//    @Test
-//    public void testEmptyInputFields() throws Exception {
-//        onView(withId(R.id.login_text_input_layout)).check(matches(allOf(
-//                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-//                isFocusable(),
-//                isClickable(),
-//                withText("")
-//        )));
-//    }
+
+
 }
