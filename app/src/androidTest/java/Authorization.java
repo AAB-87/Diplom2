@@ -18,6 +18,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.espresso.action.ViewActions.click;
 
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.not;
 
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -55,7 +56,8 @@ public class Authorization {
         onView(allOf(withHint("Пароль"))).perform(replaceText(validPassword)).check(matches(withText("password2"))); // вводим пароль
         closeSoftKeyboard(); // скрываем клавиатуру ввода
         onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопк входа
-        onView(withId(R.id.trademark_image_view)).check(matches(isDisplayed())); // убеждаемся что вошли в приложение, отображается кнопка меню
+        Thread.sleep(3500);
+        onView(withId(R.id.trademark_image_view)).check(matches(isDisplayed())); // убеждаемся что вошли в приложение, отображается ВХОСПИСЕ
     }
 
 
