@@ -1,4 +1,5 @@
 
+import androidx.annotation.NonNull;
 import androidx.test.espresso.ViewInteraction;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
@@ -74,16 +75,17 @@ public class Authorization {
     }
 
     @Test
-    public void logInWithInValidData() throws InterruptedException { // падает если авторизирован в приложении
+    public void logInWithInValidData() { // падает если авторизирован в приложении
         onView(allOf(withHint("Логин"))).perform(replaceText(invalidLogin)).check(matches(withText("5login"))); // вводим логин
         onView(allOf(withHint("Пароль"))).perform(replaceText(invalidPassword)).check(matches(withText("password"))); // вводим пароль
         closeSoftKeyboard(); // скрываем клавиатуру ввода
-        onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопк входа
-        onView(allOf(withHint("login_text_input_layout"))).check(matches(withText("Неверный логин или пароль")));
-
-//      .inRoot(withDecorView(not(is(ru.iteco.fmhandroid.ui.AppActivity.getActivity().getWindow().getDecorView()))))
-//      .check(matches(isDisplayed()));
+        onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопке входа
+        onView(withId(R.id.??????))
+                .inRoot(withDecorView(not(is(activityTestRule.getActivity().getWindow().getDecorView()))))
+                .check(matches(withText("Неверный логин или пароль")));
     }
+
+
 
 //    @Test
 //    public void logInWithInValidLoginAndValidPassword() throws InterruptedException { // падает если авторизирован в приложении
