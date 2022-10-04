@@ -80,15 +80,15 @@ public class Authorization {
         onView(allOf(withHint("Пароль"))).perform(replaceText(invalidPassword)).check(matches(withText("password"))); // вводим пароль
         closeSoftKeyboard(); // скрываем клавиатуру ввода
         onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопке входа
-        onView(withId(R.id.??????))
+        onView(withText("Неверный логин или пароль"))
                 .inRoot(withDecorView(not(is(activityTestRule.getActivity().getWindow().getDecorView()))))
-                .check(matches(withText("Неверный логин или пароль")));
+                .check(matches(isDisplayed()));
     }
 
 
-
-//    @Test
+//        @Test
 //    public void logInWithInValidLoginAndValidPassword() throws InterruptedException { // падает если авторизирован в приложении
+
 
 //    }
 //
