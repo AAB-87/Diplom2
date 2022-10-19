@@ -1,4 +1,4 @@
-package authorization;
+package ru.iteco.fmhandroid.authorization;
 
 import static androidx.test.espresso.Espresso.closeSoftKeyboard;
 import static androidx.test.espresso.Espresso.onView;
@@ -6,8 +6,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
-import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -25,7 +25,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import io.qameta.allure.kotlin.junit4.DisplayName;
 import ru.iteco.fmhandroid.R;
+import ru.iteco.fmhandroid.utils.ViewActions;
 
 @RunWith(AndroidJUnit4.class) // чтобы класс запускался как набор тестов
 
@@ -41,84 +43,87 @@ public class Authorization {
     String invalidLogin = "5login";
     String invalidPassword = "password";
 
+    // Общие правила
+    // ViewMatcher - находим, определяем элемент в иерархии
+    // ViewActions - производим действие с элементом
+    // ViewAssertions - проверяем состояние найденного элемента
+
     @Test
-    public void logInToTheApp() throws InterruptedException { // падает если авторизирован в приложении
-        ViewInteraction mainText = onView(withText("Авторизация")); // создаём ViewInteraction и указываем по id искомый элемент
-        mainText.check(matches(isDisplayed())); // проверка что элемент отражается на старнице
-        mainText.check(matches(withText("Авторизация"))); // и у этого эемента текс Войти
-        Thread.sleep(5500);
-//        SystemClock.sleep(3000);
+    @DisplayName("Проверяем что приложение запускается и отображается окно для авторизации")
+    public void logInToTheApp() {
+        onView(isRoot()).perform(ViewActions.waitElement(withText("Авторизация"), 10000)); // ожидаем появление нужного элемента
     }
 
     @Test
-    public void logInWithValidData() throws InterruptedException { // падает если авторизирован в приложении
-        onView(allOf(withHint("Логин"))).perform(replaceText(validLogin)).check(matches(withText("login2"))); // вводим логин
-        onView(allOf(withHint("Пароль"))).perform(replaceText(validPassword)).check(matches(withText("password2"))); // вводим пароль
+    @DisplayName("Авторизация с валидными данными")
+    public void logInWithValidData() { // падает если пользователь авторизирован
+        onView(isRoot()).perform(ViewActions.waitElement(allOf(withHint("Логин")), 10000)); // ожидаем появление нужного элемента
+        onView(allOf(withHint("Логин"))).perform(replaceText(validLogin)).check(matches(withText("login2"))); // вводим логин в этот элемент
+        onView(isRoot()).perform(ViewActions.waitElement(allOf(withHint("Пароль")), 10000)); // ожидаем появление нужного элемента
+        onView(allOf(withHint("Пароль"))).perform(replaceText(validPassword)).check(matches(withText("password2"))); // вводим пароль в этот элемент
         closeSoftKeyboard(); // скрываем клавиатуру ввода
         onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопк входа
         onView(withId(R.id.container_custom_app_bar_include_on_fragment_main)).check(matches(isDisplayed())); // убеждаемся что вошли в приложение, отображается ВХОСПИСЕ
-        Thread.sleep(5500);
-//        SystemClock.sleep(3000);
     }
 
     @Test
-    public void exitingTheApplication() throws InterruptedException { // работает если приложение открыто
+    @DisplayName("Выход из аккаунта")
+     public void logOutTheApplication() { // работает если пользователь не авторизован
+        onView(isRoot()).perform(ViewActions.waitElement(withId(R.id.authorization_image_button), 10000));
         onView(withId(R.id.authorization_image_button)).perform(click()); // находим иконку для выхода и кликаем по ней
         onView(withText("Выйти")).check(matches(isDisplayed())); // проверяем что всплывает кнопка Выйти
         onView(withText("Выйти")).perform(click()); // кликаем по всплывающей кнопке
         onView(withText("Авторизация")).check(matches(withText("Авторизация"))); // проверяем что отображается страница для входа
-        Thread.sleep(8500);
-//        SystemClock.sleep(3000);
     }
 
     @Test
-    public void logInWithInValidData() throws InterruptedException { // падает если авторизирован в приложении
-        onView(allOf(withHint("Логин"))).perform(replaceText(invalidLogin)).check(matches(withText("5login"))); // вводим логин
-        onView(allOf(withHint("Пароль"))).perform(replaceText(invalidPassword)).check(matches(withText("password"))); // вводим пароль
+    @DisplayName("Вход с НЕвалидными логин и пароль")
+    public void logInWithInValidData() { // падает если пользователь авторизован
+        onView(isRoot()).perform(ViewActions.waitElement(allOf(withHint("Логин")), 10000)); // ожидаем появление нужного элемента
+        onView(allOf(withHint("Логин"))).perform(replaceText(invalidLogin)).check(matches(withText("5login"))); // вводим логин в этот элемент
+        onView(isRoot()).perform(ViewActions.waitElement(allOf(withHint("Пароль")), 10000)); // ожидаем появление нужного элемента
+        onView(allOf(withHint("Пароль"))).perform(replaceText(invalidPassword)).check(matches(withText("password"))); // вводим пароль в этот элемент
         closeSoftKeyboard(); // скрываем клавиатуру ввода
         onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопке входа
         onView(withText("Неверный логин или пароль"))
                 .inRoot(withDecorView(not(is(activityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
-        Thread.sleep(7500);
-//        SystemClock.sleep(3000);
     }
 
     @Test
-    public void logInWithInValidLoginAndValidPassword() throws InterruptedException { // падает если авторизирован в приложении
-        onView(allOf(withHint("Логин"))).perform(replaceText(invalidLogin)).check(matches(withText("5login"))); // вводим логин
-        onView(allOf(withHint("Пароль"))).perform(replaceText(validPassword)).check(matches(withText("password2"))); // вводим пароль
+    @DisplayName("Вход с НЕвалидными логином и валидным паролем")
+    public void logInWithInValidLoginAndValidPassword() { // падает если пользователь авторизован
+        onView(isRoot()).perform(ViewActions.waitElement(allOf(withHint("Логин")), 10000)); // ожидаем появление нужного элемента
+        onView(allOf(withHint("Логин"))).perform(replaceText(invalidLogin)).check(matches(withText("5login"))); // вводим логин в этот элемент
+        onView(isRoot()).perform(ViewActions.waitElement(allOf(withHint("Пароль")), 10000)); // ожидаем появление нужного элемента
+        onView(allOf(withHint("Пароль"))).perform(replaceText(validPassword)).check(matches(withText("password2"))); // вводим пароль в этот элемент
         closeSoftKeyboard(); // скрываем клавиатуру ввода
         onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопке входа
-        onView(withText("Неверный логин или пароль"))
+        onView(withText("Неверный логин или пароль")) // дальше магия
                 .inRoot(withDecorView(not(is(activityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
-        Thread.sleep(7500);
-//        SystemClock.sleep(3000);
-
     }
 
     @Test
-    public void logInWithValidLoginAndInvalidPassword() throws InterruptedException { // падает если авторизирован в приложении
-        onView(allOf(withHint("Логин"))).perform(replaceText(validLogin)).check(matches(withText("login2"))); // вводим логин
-        onView(allOf(withHint("Пароль"))).perform(replaceText(invalidPassword)).check(matches(withText("password"))); // вводим пароль
+    @DisplayName("Вход с валидным логином и НЕвалидным паролем")
+    public void logInWithValidLoginAndInvalidPassword() { // падает если пользователь авторизован
+        onView(isRoot()).perform(ViewActions.waitElement(allOf(withHint("Логин")), 10000)); // ожидаем появление нужного элемента
+        onView(allOf(withHint("Логин"))).perform(replaceText(validLogin)).check(matches(withText("login2"))); // вводим логин в этот элемент
+        onView(allOf(withHint("Пароль"))).perform(replaceText(invalidPassword)).check(matches(withText("password"))); // вводим пароль в этот элемент
         closeSoftKeyboard(); // скрываем клавиатуру ввода
         onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопке входа
-        onView(withText("Неверный логин или пароль"))
+        onView(withText("Неверный логин или пароль")) // дальше магия
                 .inRoot(withDecorView(not(is(activityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
-        Thread.sleep(7500);
-//        SystemClock.sleep(3000);
     }
 
     @Test
-    public void logInWithEmptyData() throws InterruptedException { // падает если авторизирован в приложении
+    @DisplayName("Вход с пустыми полями")
+    public void logInWithEmptyData() { // падает если пользователь авторизован
         onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопке входа
         onView(withText("Логин и пароль не могут быть пустыми"))
                 .inRoot(withDecorView(not(is(activityTestRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
-        Thread.sleep(7500);
-//        SystemClock.sleep(3000);
     }
 
 }
