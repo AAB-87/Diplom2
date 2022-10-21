@@ -120,6 +120,7 @@ public class Authorization {
     @Test
     @DisplayName("Вход с пустыми полями")
     public void logInWithEmptyData() { // падает если пользователь авторизован
+        onView(isRoot()).perform(ViewActions.waitElement(allOf(withId(R.id.enter_button)), 10000)); // ожидаем появление нужного элемента
         onView(withId(R.id.enter_button)).perform(click()); // кликаем по кнопке входа
         onView(withText("Логин и пароль не могут быть пустыми"))
                 .inRoot(withDecorView(not(is(activityTestRule.getActivity().getWindow().getDecorView()))))
