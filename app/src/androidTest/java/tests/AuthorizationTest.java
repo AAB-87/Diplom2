@@ -40,7 +40,7 @@ public class AuthorizationTest {
         try {
             AuthorizationFunc.isAuthorizationScreen();
         } catch (NoMatchingViewException e) {
-            ControlPanelSteps.logOut();
+            ControlPanelFunc.logOut();
         }
     }
 
@@ -48,8 +48,8 @@ public class AuthorizationTest {
     @DisplayName("Авторизация с валидными данными")
     public void shouldLogInWithValidData() throws InterruptedException {
         AuthorizationFunc.logIn(validLogin, validPassword);
-        ControlPanelSteps.checkTradeMark();
-        ControlPanelSteps.logOut();
+        ControlPanelFunc.checkTradeMark();
+        ControlPanelFunc.logOut();
     }
 
     @Test
@@ -63,7 +63,7 @@ public class AuthorizationTest {
     @DisplayName("Выход из аккаунта")
     public void shouldLogOut() throws InterruptedException {
         AuthorizationFunc.logIn(validLogin, validPassword);
-        ControlPanelSteps.logOut();
+        ControlPanelFunc.logOut();
         AuthorizationFunc.isAuthorizationScreen();
     }
 }
