@@ -17,7 +17,7 @@ import functions.NewsSteps;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 @RunWith(AllureAndroidJUnit4.class)
-public class NewsTests {
+public class NewsTest {
 
     @Rule
     public ActivityTestRule<AppActivity> activityTestRule =
