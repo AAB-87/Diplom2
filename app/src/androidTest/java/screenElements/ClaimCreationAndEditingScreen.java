@@ -24,7 +24,6 @@ public class ClaimCreationAndEditingScreen {
     String subtitleOfClaimBlock = "custom_app_bar_sub_title_text_view";
     String iconForExecutorChoice = "text_input_end_icon";
 
-
     public static ViewInteraction titleOfClaimsCreatingPage = onView(withText("Creating"));
     public static ViewInteraction titleTextInputOfClaim = onView(withId(R.id.title_edit_text));
     public static ViewInteraction executorTextInput = onView(withId(R.id.executor_drop_menu_text_input_layout));

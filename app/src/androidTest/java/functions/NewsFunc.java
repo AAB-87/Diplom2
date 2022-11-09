@@ -19,7 +19,7 @@ import ru.iteco.fmhandroid.R;
 import screenElements.NewsCreationAndEditingScreen;
 import screenElements.NewsScreen;
 
-public class NewsSteps {
+public class NewsFunc {
 
     public static void initiateTheCreationOfNews() {
         Allure.step("Начинаем создавать новость (переход к созданию новости)");

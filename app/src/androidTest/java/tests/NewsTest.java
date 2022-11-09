@@ -13,7 +13,7 @@ import io.qameta.allure.kotlin.junit4.DisplayName;
 import functions.AuthorizationFunc;
 import functions.ControlPanelFunc;
 import functions.NewsCreationAndEditingFunc;
-import functions.NewsSteps;
+import functions.NewsFunc;
 import ru.iteco.fmhandroid.ui.AppActivity;
 
 @RunWith(AllureAndroidJUnit4.class)
@@ -38,15 +38,15 @@ public class NewsTest {
     @DisplayName("Наличие новостей в блоке \"Новости\" (минимум 3)")
     public void shouldBeThreeNewsInNewsBlock() {
         ControlPanelFunc.goToNewsBlock();
-        NewsSteps.checkThatThereAreThreeNewsItemsInTheNewsBlock();
+        NewsFunc.checkThatThereAreThreeNewsItemsInTheNewsBlock();
     }
 
     @Test // в одиночку проходит
     @DisplayName("Полнота информации новостей (в развернутом состоянии) в блоке \"Новости\"")
     public void shouldBeFullContentOfFirstExpandedNewsInNewsBlock() {
         ControlPanelFunc.goToNewsBlock();
-        NewsSteps.expandFirstNewsInNewsBlock();
-        NewsSteps.checkBasicContentOfFirstExpandedNewsInNewsBlock();
+        NewsFunc.expandFirstNewsInNewsBlock();
+        NewsFunc.checkBasicContentOfFirstExpandedNewsInNewsBlock();
     }
 
     @Test // проблемы со стабильностью
@@ -68,11 +68,11 @@ public class NewsTest {
         NewsCreationAndEditingFunc.fillInTheNewsFields(emptyCategory, withCategoryChoice, chosenCategory, category, title, emptyDate, emptyTime, withDialPadOrTextInput, saveOrCancelTime, emptyDescription, description);
         NewsCreationAndEditingFunc.saveNews();
         ControlPanelFunc.goToNewsBlock();
-        NewsSteps.checkNewsData(chosenCategory, description);
-        NewsSteps.goToEditingModeForNews();
-        NewsSteps.deleteNews(chosenCategory);
+        NewsFunc.checkNewsData(chosenCategory, description);
+        NewsFunc.goToEditingModeForNews();
+        NewsFunc.deleteNews(chosenCategory);
         ControlPanelFunc.goToNewsBlock();
         Thread.sleep(3000);
-        NewsSteps.checkThatNewsDoesNotExist(chosenCategory, description);
+        NewsFunc.checkThatNewsDoesNotExist(chosenCategory, description);
     }
 }
