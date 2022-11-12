@@ -64,7 +64,7 @@ public class NewsTest {
         String emptyDescription = "no";
         String description = "New description";
         ControlPanelFunc.goToNewsBlock();
-        NewsSteps.initiateTheCreationOfNews();
+        NewsFunc.initiateTheCreationOfNews();
         NewsCreationAndEditingFunc.fillInTheNewsFields(emptyCategory, withCategoryChoice, chosenCategory, category, title, emptyDate, emptyTime, withDialPadOrTextInput, saveOrCancelTime, emptyDescription, description);
         NewsCreationAndEditingFunc.saveNews();
         ControlPanelFunc.goToNewsBlock();
